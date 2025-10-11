@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="登录\n开始购物"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:textColor="#3F51B5"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView" />
+
+    <EditText
+        android:layout_marginTop="20dp"
+        android:id="@+id/phone"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:hint="输入手机号"
+        android:textColor="#8C8C8C"
+        android:background="@drawable/bg_yuanjiao"
+        android:backgroundTint="#34A9A9EB"/>
+
+    <EditText
+        android:id="@+id/psw"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:hint="输入密码"
+        android:inputType="textPassword"
+        android:background="@drawable/bg_yuanjiao"
+        android:backgroundTint="#34A9A9EB"/>
+
+    <TextView
+        android:id="@+id/showpsw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="显示密码"
+        app:layout_constraintTop_toBottomOf="@id/psw"
+        app:layout_constraintStart_toStartOf="@id/psw"
+        android:textColor="#3F51B5"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/findpsw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="找回密码"
+        app:layout_constraintTop_toBottomOf="@id/psw"
+        app:layout_constraintEnd_toEndOf="@id/psw"
+        android:textColor="#3F51B5"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_yuanjiao"
+        android:backgroundTint="#3F51B5"
+        app:layout_constraintEnd_toEndOf="@+id/psw"
+        app:layout_constraintStart_toStartOf="@+id/psw"
+        app:layout_constraintTop_toBottomOf="@+id/showpsw" />
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:text="注册"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_yuanjiao"
+        android:backgroundTint="#3F51B5"
+        app:layout_constraintEnd_toEndOf="@+id/psw"
+        app:layout_constraintStart_toStartOf="@+id/psw"
+        app:layout_constraintTop_toBottomOf="@+id/login" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

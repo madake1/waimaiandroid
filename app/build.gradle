@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+
+
 }
 
 android {
@@ -16,7 +19,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -25,6 +27,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -36,7 +39,9 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp("androidx.room:room-compiler:2.6.1")
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material

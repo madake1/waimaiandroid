@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
+    private var lastFailedPhone: String? = null
     private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,8 @@ class LoginActivity : AppCompatActivity() {
             // 保持光标在末尾
             binding.psw.setSelection(binding.psw.text?.length ?: 0)
         }
+
+
         binding.login.singleClick {
             val phone = binding.phone.text.toString().trim()
             val password = binding.psw.text.toString().trim()
@@ -47,24 +50,31 @@ class LoginActivity : AppCompatActivity() {
             }
 
             lifecycleScope.launch {
-                // 在 IO 线程调用仓库层登录
                 val result = withContext(Dispatchers.IO) {
                     UserRepository.login(phone, password)
                 }
 
-                // 回到主线程处理 UI
                 if (result.success && result.user != null) {
-                    // 登录成功，保存用户id和登录时间
+                    // 登录成功
                     UserSession.saveLogin(this@LoginActivity, result.user.id)
                     CustomToast.show("登录成功")
                     startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                     finish()
                 } else {
-                    // 登录失败，提示不同原因
+                    if(result.msg=="密码不对"){
+                        lastFailedPhone = phone
+                    }
                     CustomToast.show(result.msg)
                 }
             }
         }
+        binding.findpsw.singleClick {
+            val intent = Intent(this, FindPswActivity::class.java)
+            intent.putExtra("phone", lastFailedPhone ?: "")
+            startActivity(intent)
+        }
+
+
         binding.register.singleClick {
             startActivity(Intent(this,RegisterActivity::class.java))
             finish()

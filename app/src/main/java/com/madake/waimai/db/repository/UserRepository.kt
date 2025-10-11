@@ -75,5 +75,17 @@ object UserRepository {
         return userDao.getUserByPhone(phone)?.id
     }
 
+    suspend fun updatePassword(phone: String, newPassword: String): Boolean {
+        return try {
+            val user = userDao.getUserByPhone(phone) ?: return false
+            val updatedUser = user.copy(password = newPassword)
+            userDao.update(updatedUser)
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
 
 }

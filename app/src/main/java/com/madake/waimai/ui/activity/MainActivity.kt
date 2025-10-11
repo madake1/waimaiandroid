@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun goToHome() {
-        if (!UserSession.isSessionValid(this, timeoutMinutes = 1)) {
+        if (!UserSession.isSessionValid(this)) {
             // 超时，需要重新登录
             UserSession.clearSession(this)
             startActivity(Intent(this, LoginActivity::class.java))

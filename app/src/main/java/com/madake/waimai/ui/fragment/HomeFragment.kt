@@ -5,26 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.madake.waimai.R
 import com.madake.waimai.databinding.FragmentHomeBinding
 import com.madake.waimai.db.entity.Category
-import com.madake.waimai.db.entity.GoodsEntity
-import com.madake.waimai.mcontext
 import com.madake.waimai.ui.adapter.CategoryAdapter
 import com.madake.waimai.utils.CustomToast
+import com.madake.waimai.utils.MockDataGenerator
 import com.madake.waimai.utils.TextColorAnimator
+import com.madake.waimai.utils.singleClick
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
     private var animatorPromotion: TextColorAnimator? = null
     private var animatorHot: TextColorAnimator? = null
-
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private val categories = mutableListOf(
         Category("推荐", true),
         Category("手机"),
@@ -47,7 +45,6 @@ class HomeFragment : Fragment() {
         Category("文具")
     )
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +61,7 @@ class HomeFragment : Fragment() {
 //        setupProductRecyclerView()
         setupSearchBox()
         setupUI()
+        setData()
     }
 
     private fun setupSearchBox() {
@@ -96,14 +94,6 @@ class HomeFragment : Fragment() {
 //        binding.rvProduct.adapter = ProductAdapter(generateDummyGoods())
 //    }
 
-    private fun generateDummyGoods(): List<GoodsEntity> {
-        // 随机生成一些商品
-        return listOf(
-            GoodsEntity(name = "苹果", price = 5.0, stock = 100, category = "水果", description = "新鲜水果", imageUrl = null, salesVolume = 10, createTime = System.currentTimeMillis(), isAvailable = true, sellerId = 1),
-            GoodsEntity(name = "面包", price = 3.5, stock = 50, category = "食品", description = "美味面包", imageUrl = null, salesVolume = 20, createTime = System.currentTimeMillis(), isAvailable = true, sellerId = 1),
-            GoodsEntity(name = "手机壳", price = 15.0, stock = 200, category = "手机", description = "保护手机", imageUrl = null, salesVolume = 5, createTime = System.currentTimeMillis(), isAvailable = true, sellerId = 1),
-        )
-    }
 
     private fun setupUI(){
         // 百亿补贴四个字红黄绿渐变
@@ -137,5 +127,23 @@ class HomeFragment : Fragment() {
         animatorPromotion = null
         animatorHot?.stop()
         animatorHot = null
+    }
+    private fun setData(){
+        binding.tvPromotion.singleClick {
+            lifecycleScope.launch {
+                MockDataGenerator.generateSellers(requireContext(), 5)
+                CustomToast.show("生成商家成功")
+            }
+        }
+        binding.tvHot.singleClick {
+            lifecycleScope.launch {
+                val goods = MockDataGenerator.generateGoods(requireContext(), 20, 5)
+                if (goods.isEmpty()) {
+                    CustomToast.show("先生成商家")
+                } else {
+                    CustomToast.show("生成商品成功")
+                }
+            }
+        }
     }
 }

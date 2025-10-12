@@ -1,7 +1,7 @@
 package com.madake.waimai.utils
 
-import com.madake.waimai.db.dao.GoodsDao
-import com.madake.waimai.db.dao.SellerDao
+import android.content.Context
+import com.madake.waimai.db.WaimaiDatabase
 import com.madake.waimai.db.entity.GoodsEntity
 import com.madake.waimai.db.entity.SellerEntity
 import kotlinx.coroutines.Dispatchers
@@ -10,11 +10,11 @@ import kotlin.random.Random
 
 object MockDataGenerator {
 
-    // 商家名集合，多一些
     private val sellerNames = listOf(
         "红酒坊", "水果屋", "时尚鞋包", "美味食品", "电子数码",
         "零食铺", "家居用品", "潮流服饰", "母婴乐园", "户外运动馆",
-        "图书书城", "文具铺子", "美妆工坊", "护肤馆", "家电专卖"
+        "图书书城", "文具铺子", "美妆工坊", "护肤馆", "家电专卖",
+        "茶叶馆", "运动馆", "厨房用品", "宠物用品", "摄影器材"
     )
 
     private val ownerNames = listOf(
@@ -22,20 +22,22 @@ object MockDataGenerator {
         "周九", "吴十", "郑十一", "冯十二"
     )
 
-    // 商品类别
     private val categories = listOf(
         "推荐", "手机", "数码", "食品", "零食", "鞋包",
         "服饰", "水果", "蔬菜", "家电", "电器", "美妆",
         "护肤", "母婴", "运动", "户外", "家居", "图书", "文具"
     )
 
-    /**
-     * 随机生成商家并插入数据库
-     */
-    suspend fun generateSellers(sellerDao: SellerDao, count: Int = 20) = withContext(Dispatchers.IO) {
+    // 内部持有数据库 DAO
+    private fun sellerDao(context: Context) = WaimaiDatabase.getInstance(context).sellerDao()
+    private fun goodsDao(context: Context) = WaimaiDatabase.getInstance(context).goodsDao()
+
+    /** 生成 n 个商家 */
+    suspend fun generateSellers(context: Context, n: Int): List<SellerEntity> = withContext(Dispatchers.IO) {
+        val dao = sellerDao(context)
         val sellers = mutableListOf<SellerEntity>()
-        repeat(count) {
-            val name = sellerNames.random() + Random.nextInt(1, 1000) // 保证名称不重复
+        repeat(n) {
+            val name = sellerNames.random() + Random.nextInt(1, 1000)
             val seller = SellerEntity(
                 name = name,
                 ownerName = ownerNames.random(),
@@ -45,26 +47,31 @@ object MockDataGenerator {
             )
             sellers.add(seller)
         }
-        sellerDao.insertSellers(sellers)
+        dao.insertSellers(sellers)
         sellers
     }
 
-    /**
-     * 随机生成商品并插入数据库
-     * @param goodsDao: 商品 Dao
-     * @param sellers: 已存在的商家列表
-     * @param count: 商品数量
-     * @param imageCount: assets/images 下图片数量
-     */
+    /** 生成 n1 个商品，并分配给 n2 个商家 */
     suspend fun generateGoods(
-        goodsDao: GoodsDao,
-        sellers: List<SellerEntity>,
-        count: Int = 100,
+        context: Context,
+        n1: Int,
+        n2: Int,
         imageCount: Int = 216
-    ) = withContext(Dispatchers.IO) {
+    ): List<GoodsEntity> = withContext(Dispatchers.IO) {
+        val goodsDao = goodsDao(context)
+        val sellerDao = sellerDao(context)
+
+        // 获取数据库中所有商家 ID
+        val allIds = sellerDao.getAllSellerIds()
+        if (allIds.isEmpty()) return@withContext emptyList<GoodsEntity>()
+
+        // 随机选择 n2 个商家 ID，如果不足 n2 就全部
+        val selectedIds = if (allIds.size >= n2) allIds.shuffled().take(n2) else allIds
+
+        // 开始生成商品
         val goodsList = mutableListOf<GoodsEntity>()
-        repeat(count) {
-            val seller = sellers.random()
+        repeat(n1) {
+            val sellerId = selectedIds.random()
             val price = Random.nextDouble(10.0, 999.0)
             val isBillion = Random.nextBoolean()
             val isToday = Random.nextBoolean()
@@ -84,7 +91,7 @@ object MockDataGenerator {
                 salesVolume = Random.nextInt(0, 1000),
                 createTime = System.currentTimeMillis(),
                 isAvailable = true,
-                sellerId = seller.id,
+                sellerId = sellerId,
                 isBillionSubsidy = isBillion,
                 billionSubsidyAmount = billionSubsidy,
                 isTodayRecommend = isToday,
@@ -92,6 +99,7 @@ object MockDataGenerator {
             )
             goodsList.add(goods)
         }
+
         goodsDao.insertGoodsList(goodsList)
         goodsList
     }

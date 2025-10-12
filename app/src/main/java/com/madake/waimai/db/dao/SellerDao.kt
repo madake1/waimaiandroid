@@ -29,4 +29,7 @@ interface SellerDao {
     // 根据 ID 列表批量查询商家实体
     @Query("SELECT * FROM sellers WHERE id IN (:ids)")
     suspend fun getSellersByIds(ids: List<Long>): List<SellerEntity>
+
+    @Query("DELETE FROM sellers")
+    suspend fun clearAllSellers()
 }

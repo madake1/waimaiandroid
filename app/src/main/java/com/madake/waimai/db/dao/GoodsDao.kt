@@ -17,4 +17,13 @@ interface GoodsDao {
 
     @Query("SELECT * FROM goods")
     suspend fun getAllGoods(): List<GoodsEntity>
+
+    @Query("SELECT * FROM goods WHERE isBillionSubsidy = 1 ORDER BY createTime DESC LIMIT :limit OFFSET :offset")
+    suspend fun getBillionSubsidyGoods(offset: Int, limit: Int): List<GoodsEntity>
+
+    @Query("SELECT * FROM goods ORDER BY salesVolume DESC LIMIT :limit OFFSET :offset")
+    suspend fun getHotGoods(offset: Int, limit: Int): List<GoodsEntity>
+
+    @Query("DELETE FROM goods")
+    suspend fun clearAllGoods()
 }

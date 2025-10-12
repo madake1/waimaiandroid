@@ -1,5 +1,6 @@
 package com.madake.waimai.ui.fragment
 
+import HomeViewModel
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.madake.waimai.databinding.FragmentHomeBinding
 import com.madake.waimai.db.entity.Category
 import com.madake.waimai.ui.adapter.CategoryAdapter
+import com.madake.waimai.ui.adapter.HorizontalGoodsAdapter
 import com.madake.waimai.utils.CustomToast
 import com.madake.waimai.utils.MockDataGenerator
 import com.madake.waimai.utils.TextColorAnimator
@@ -19,6 +22,9 @@ import com.madake.waimai.utils.singleClick
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
+    private val homeViewModel: HomeViewModel by lazy {
+        HomeViewModel(requireContext())
+    }
     private var animatorPromotion: TextColorAnimator? = null
     private var animatorHot: TextColorAnimator? = null
     private var _binding: FragmentHomeBinding? = null
@@ -57,7 +63,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupCategoryRecyclerView()
-//        setupHorizontalRecyclerViews()
+        setupHorizontalRecyclerViews()
 //        setupProductRecyclerView()
         setupSearchBox()
         setupUI()
@@ -79,15 +85,48 @@ class HomeFragment : Fragment() {
         binding.rvCategory.adapter = adapter
     }
 
-//    private fun setupHorizontalRecyclerViews() {
-//        // 横向 RecyclerView 1
-//        binding.rvHorizontal1.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-//        binding.rvHorizontal1.adapter = HorizontalGoodsAdapter(generateDummyGoods())
-//
-//        // 横向 RecyclerView 2
-//        binding.rvHorizontal2.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-//        binding.rvHorizontal2.adapter = HorizontalGoodsAdapter(generateDummyGoods())
-//    }
+    private fun setupHorizontalRecyclerViews() {
+        val billionAdapter = HorizontalGoodsAdapter(mutableListOf())
+        binding.rvHorizontal1.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvHorizontal1.adapter = billionAdapter
+
+        val hotAdapter = HorizontalGoodsAdapter(mutableListOf())
+        binding.rvHorizontal2.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvHorizontal2.adapter = hotAdapter
+
+        // 观察 LiveData
+        homeViewModel.billionGoods.observe(viewLifecycleOwner) { list ->
+            billionAdapter.updateData(list)
+        }
+
+        homeViewModel.hotGoods.observe(viewLifecycleOwner) { list ->
+            hotAdapter.updateData(list)
+        }
+
+        // 滑动到底自动加载下一页
+        binding.rvHorizontal1.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
+                val lm = rv.layoutManager as LinearLayoutManager
+                if (lm.findLastVisibleItemPosition() >= billionAdapter.itemCount - 2) {
+                    homeViewModel.loadNextBillionGoods()
+                }
+            }
+        })
+
+        binding.rvHorizontal2.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
+                val lm = rv.layoutManager as LinearLayoutManager
+                if (lm.findLastVisibleItemPosition() >= hotAdapter.itemCount - 2) {
+                    homeViewModel.loadNextHotGoods()
+                }
+            }
+        })
+
+        // 初始加载第一页
+        homeViewModel.loadNextBillionGoods()
+        homeViewModel.loadNextHotGoods()
+    }
+
 //
 //    private fun setupProductRecyclerView() {
 //        binding.rvProduct.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)

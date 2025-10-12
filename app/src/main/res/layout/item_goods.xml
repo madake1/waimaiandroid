@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="150dp"
+    android:padding="8dp">
+
+    <!-- 商品图片 -->
+    <ImageView
+        android:id="@+id/iv_goods_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 百亿补贴标签 -->
+    <TextView
+        android:id="@+id/tv_billion_subsidy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="百亿补贴"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:background="#FF0000"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="@id/iv_goods_image"
+        app:layout_constraintStart_toStartOf="@id/iv_goods_image"
+ />
+
+    <!-- 商品标题 -->
+    <TextView
+        android:id="@+id/tv_goods_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="商品标题"
+        android:textSize="12sp"
+        android:textColor="@android:color/black"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintTop_toBottomOf="@id/iv_goods_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+/>
+
+
+    <TextView
+        android:id="@+id/tv_price_now"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¥9.9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+
+    <!-- 销量 -->
+    <TextView
+        android:id="@+id/tv_sales_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="销量：1234"
+        android:textColor="#666666"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -79,7 +79,7 @@ object MockDataGenerator {
             val billionSubsidy = if (isBillion) Random.nextDouble(0.0, price) else 0.0
             val category = categories.random()
             val imageIndex = Random.nextInt(1, imageCount + 1)
-            val imageUrl = "images/img$imageIndex.png"
+            val imageUrl = "img$imageIndex"
 
             val goods = GoodsEntity(
                 name = "$category 商品${Random.nextInt(1,1000)}",
@@ -102,5 +102,13 @@ object MockDataGenerator {
 
         goodsDao.insertGoodsList(goodsList)
         goodsList
+    }
+    /** 清空商品表和商家表 */
+    suspend fun clearAll(context: Context): Boolean = withContext(Dispatchers.IO) {
+        val goodsDao = goodsDao(context)
+        val sellerDao = sellerDao(context)
+        goodsDao.clearAllGoods()
+        sellerDao.clearAllSellers()
+        true
     }
 }

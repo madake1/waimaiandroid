@@ -1,12 +1,14 @@
 package com.madake.waimai.utils
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.madake.waimai.R
 
 //*****************点击防抖**********************//
@@ -46,3 +48,20 @@ fun <T : View> T.singleClick(delay: Long = 1000L, block: (T) -> Unit) {
     }
 }
 //*****************点击防抖**********************//
+
+fun ImageView.load(resName: String) {
+    val context = this.context
+    val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
+    if (resId != 0) {
+        Glide.with(context)
+            .load(resId)
+            .centerCrop()
+            .into(this)
+    } else {
+        // 找不到资源时显示占位图
+        Glide.with(context)
+            .load(R.drawable.ic_launcher_foreground) // 占位图，可替换
+            .centerCrop()
+            .into(this)
+    }
+}

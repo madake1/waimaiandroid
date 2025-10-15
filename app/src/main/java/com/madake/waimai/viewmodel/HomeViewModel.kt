@@ -24,6 +24,11 @@ class HomeViewModel(context: Context) : ViewModel() {
     private val _hotGoods = MutableLiveData<List<GoodsEntity>>()
     val hotGoods: LiveData<List<GoodsEntity>> = _hotGoods
 
+    // 销量商品分页
+    private var allPage = 0
+    private val _allGoods = MutableLiveData<List<GoodsEntity>>()
+    val allGoods: LiveData<List<GoodsEntity>> = _allGoods
+
     // 加载下一页百亿补贴商品
     fun loadNextBillionGoods() {
         viewModelScope.launch {
@@ -46,6 +51,19 @@ class HomeViewModel(context: Context) : ViewModel() {
                 current.addAll(items)
                 _hotGoods.value = current
                 hotPage++
+            }
+        }
+    }
+
+    // 加载下一页销量商品
+    fun loadNextAllGoods() {
+        viewModelScope.launch {
+            val items = goodsDao.getAllGoods(offset = allPage * pageSize, limit = pageSize)
+            if (items.isNotEmpty()) {
+                val current = _allGoods.value?.toMutableList() ?: mutableListOf()
+                current.addAll(items)
+                _allGoods.value = current
+                allPage++
             }
         }
     }

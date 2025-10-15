@@ -93,8 +93,8 @@ object MockDataGenerator {
                 isAvailable = true,
                 sellerId = sellerId,
                 isBillionSubsidy = isBillion,
-                billionSubsidyAmount = billionSubsidy,
-                isTodayRecommend = isToday,
+                isPostPay = Random.nextBoolean() ,      // 是否先用后付
+                isDiscounted = Random.nextBoolean(),
                 sellerDiscount = sellerDiscount
             )
             goodsList.add(goods)

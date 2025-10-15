@@ -24,6 +24,10 @@ interface GoodsDao {
     @Query("SELECT * FROM goods ORDER BY salesVolume DESC LIMIT :limit OFFSET :offset")
     suspend fun getHotGoods(offset: Int, limit: Int): List<GoodsEntity>
 
+    // 所有商品（默认按上架时间或 id 降序，可按需修改排序）
+    @Query("SELECT * FROM goods ORDER BY createTime DESC LIMIT :limit OFFSET :offset")
+    suspend fun getAllGoods(limit: Int, offset: Int): List<GoodsEntity>
+
     @Query("DELETE FROM goods")
     suspend fun clearAllGoods()
 }

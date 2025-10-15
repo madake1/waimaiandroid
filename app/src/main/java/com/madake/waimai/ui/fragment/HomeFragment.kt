@@ -11,10 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.madake.waimai.databinding.FragmentHomeBinding
 import com.madake.waimai.db.entity.Category
 import com.madake.waimai.ui.adapter.CategoryAdapter
 import com.madake.waimai.ui.adapter.HorizontalGoodsAdapter
+import com.madake.waimai.ui.home.ProductAdapter
 import com.madake.waimai.utils.CustomToast
 import com.madake.waimai.utils.MockDataGenerator
 import com.madake.waimai.utils.TextColorAnimator
@@ -64,7 +66,7 @@ class HomeFragment : Fragment() {
 
         setupCategoryRecyclerView()
         setupHorizontalRecyclerViews()
-//        setupProductRecyclerView()
+        setupProductRecyclerView()
         setupSearchBox()
         setupUI()
         setData()
@@ -127,11 +129,32 @@ class HomeFragment : Fragment() {
         homeViewModel.loadNextHotGoods()
     }
 
-//
-//    private fun setupProductRecyclerView() {
-//        binding.rvProduct.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-//        binding.rvProduct.adapter = ProductAdapter(generateDummyGoods())
-//    }
+
+    private fun setupProductRecyclerView() {
+        binding.rvProduct.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        val adapter = ProductAdapter(mutableListOf())
+        binding.rvProduct.adapter = adapter
+
+        // 观察 LiveData
+        homeViewModel.allGoods.observe(viewLifecycleOwner) { list ->
+            adapter.updateData(list)
+        }
+        binding.rvProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
+                val lm = rv.layoutManager as StaggeredGridLayoutManager
+                val lastVisiblePositions = IntArray(lm.spanCount)
+                lm.findLastVisibleItemPositions(lastVisiblePositions)
+                val lastVisibleItem = lastVisiblePositions.maxOrNull() ?: 0
+
+                if (lastVisibleItem >= adapter.itemCount - 2) {
+                    homeViewModel.loadNextAllGoods()
+                }
+            }
+        })
+
+        homeViewModel.loadNextAllGoods()
+    }
 
 
     private fun setupUI(){

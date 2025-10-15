@@ -17,7 +17,7 @@ import com.madake.waimai.db.entity.UserEntity
         GoodsEntity::class,
         SellerEntity::class // 如果你还没写 SellerEntity，等会加上
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class WaimaiDatabase : RoomDatabase() {

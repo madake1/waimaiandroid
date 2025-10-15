@@ -1,0 +1,21 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- 背景颜色：淡黄色 -->
+    <solid android:color="#FFEB3B" />
+
+    <!-- 描边颜色：橙色，宽度2dp -->
+    <stroke
+        android:width="2dp"
+        android:color="#FF5722" />
+
+    <!-- 圆角半径 -->
+    <corners android:radius="6dp" />
+
+    <!-- 内边距（可选，让内容不贴边） -->
+    <padding
+        android:left="4dp"
+        android:right="4dp"
+        android:top="2dp"
+        android:bottom="2dp" />
+</shape>

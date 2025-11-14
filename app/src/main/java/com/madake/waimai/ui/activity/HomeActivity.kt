@@ -57,7 +57,7 @@ private fun selectTab(tabId: Int) {
         R.id.nav_message -> {
             binding.iconMessage.setColorFilter(ContextCompat.getColor(this, R.color.blue))
             binding.textMessage.setTextColor(ContextCompat.getColor(this, R.color.blue))
-                replaceFragment(MessageFragment())
+            replaceFragment(MessageFragment())
         }
         R.id.nav_cart -> {
             binding.iconCart.setColorFilter(ContextCompat.getColor(this, R.color.blue))

@@ -12,6 +12,7 @@ import com.madake.waimai.R
 import com.madake.waimai.databinding.ActivityHomeBinding
 import com.madake.waimai.ui.fragment.HomeFragment
 import com.madake.waimai.ui.fragment.MessageFragment
+import com.madake.waimai.ui.fragment.ProfileFragment
 import com.madake.waimai.utils.MockDataGenerator
 import kotlinx.coroutines.launch
 
@@ -67,7 +68,7 @@ private fun selectTab(tabId: Int) {
         R.id.nav_profile -> {
             binding.iconProfile.setColorFilter(ContextCompat.getColor(this, R.color.blue))
             binding.textProfile.setTextColor(ContextCompat.getColor(this, R.color.blue))
-//                replaceFragment(ProfileFragment())
+                replaceFragment(ProfileFragment())
         }
     }
 }

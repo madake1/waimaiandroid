@@ -1,13 +1,7 @@
 package com.madake.waimai.utils
 
-import android.content.Context
-import android.graphics.BitmapFactory
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.madake.waimai.R
 
